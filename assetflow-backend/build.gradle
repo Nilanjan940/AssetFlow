@@ -27,11 +27,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     
-    // H2 Database (for development)
+    // H2 Database
     runtimeOnly 'com.h2database:h2'
-    
-    // PostgreSQL (for production - we'll enable later)
-    // implementation 'org.postgresql:postgresql:42.7.0'
     
     // JWT
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
