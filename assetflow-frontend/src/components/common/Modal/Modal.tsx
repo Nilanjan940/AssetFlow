@@ -43,12 +43,14 @@ export const Modal: React.FC<ModalProps> = ({
             className
           )}
         >
-          {title && (
-            <Dialog.Header className="flex items-center justify-between p-6 border-b">
+          {(title || description) && (
+            <div className="flex items-center justify-between p-6 border-b">
               <div>
-                <Dialog.Title className="text-lg font-semibold">
-                  {title}
-                </Dialog.Title>
+                {title && (
+                  <Dialog.Title className="text-lg font-semibold">
+                    {title}
+                  </Dialog.Title>
+                )}
                 {description && (
                   <Dialog.Description className="text-sm text-muted-foreground">
                     {description}
@@ -59,7 +61,7 @@ export const Modal: React.FC<ModalProps> = ({
                 <X className="h-4 w-4" />
                 <span className="sr-only">Close</span>
               </Dialog.Close>
-            </Dialog.Header>
+            </div>
           )}
           <div className="p-6">{children}</div>
         </Dialog.Content>

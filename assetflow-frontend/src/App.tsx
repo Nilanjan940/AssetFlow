@@ -2,21 +2,21 @@ import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Toaster } from 'react-hot-toast';
-import { Layout } from '@/components/layout/Layout/Layout';
-import { Login } from '@/pages/Login/Login';
-import { Register } from '@/pages/Register/Register';
-import { Dashboard } from '@/components/features/Dashboard/Dashboard';
-import { Assets } from '@/components/features/Assets/Assets';
-import { Allocations } from '@/components/features/Allocations/Allocations';
-import { Bookings } from '@/components/features/Bookings/Bookings';
-import { Maintenance } from '@/components/features/Maintenance/Maintenance';
-import { Audit } from '@/components/features/Audit/Audit';
-import { Reports } from '@/components/features/Reports/Reports';
-import { Organization } from '@/components/features/Organization/Organization';
-import { ActivityLogs } from '@/components/features/ActivityLogs/ActivityLogs';
-import { ProtectedRoute } from '@/components/common/ProtectedRoute/ProtectedRoute';
-import { getCurrentUser } from '@/store/slices/auth.slice';
-import { AppDispatch, RootState } from '@/store';
+import { Layout } from './components/layout/Layout/Layout';
+import { Login } from './pages/Login/Login';
+import { Register } from './pages/Register/Register';
+import { Dashboard } from './components/features/Dashboard/Dashboard';
+import { Assets } from './components/features/Assets/Assets';
+import { Allocations } from './components/features/Allocations/Allocations';
+import { Bookings } from './components/features/Bookings/Bookings';
+import { Maintenance } from './components/features/Maintenance/Maintenance';
+import { Audit } from './components/features/Audit/Audit';
+import { Reports } from './components/features/Reports/Reports';
+import { Organization } from './components/features/Organization/Organization';
+import { ActivityLogs } from './components/features/ActivityLogs/ActivityLogs';
+import { ProtectedRoute } from './components/common/ProtectedRoute/ProtectedRoute';
+import { getCurrentUser } from './store/slices/auth.slice';
+import { AppDispatch, RootState } from './store';
 
 const App: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -47,9 +47,9 @@ const App: React.FC = () => {
         toastOptions={{
           duration: 4000,
           style: {
-            background: 'hsl(var(--background))',
-            color: 'hsl(var(--foreground))',
-            border: '1px solid hsl(var(--border))',
+            background: '#fff',
+            color: '#333',
+            border: '1px solid #e5e7eb',
           },
           success: {
             iconTheme: {

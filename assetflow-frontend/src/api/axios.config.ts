@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { store } from '@/store';
-import { logout, refreshToken } from '@/store/slices/auth.slice';
-import { toast } from 'react-hot-toast';
+import { logout } from '@/store/slices/auth.slice';
+import toast from 'react-hot-toast';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api/v1';
 
@@ -49,15 +49,10 @@ axiosInstance.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // Don't retry if it's a refresh token request or already retried
-    if (
-      originalRequest.url?.includes('/auth/refresh') ||
-      originalRequest._retry
-    ) {
+    if (originalRequest.url?.includes('/auth/refresh') || originalRequest._retry) {
       return Promise.reject(error);
     }
 
-    // Handle 401 Unauthorized
     if (error.response?.status === 401) {
       if (!isRefreshing) {
         isRefreshing = true;
@@ -81,26 +76,22 @@ axiosInstance.interceptors.response.use(
           processQueue(null);
           isRefreshing = false;
 
-          // Retry original request with new token
           originalRequest.headers.Authorization = `Bearer ${accessToken}`;
           return axiosInstance(originalRequest);
         } catch (refreshError) {
           processQueue(refreshError as Error);
           isRefreshing = false;
 
-          // Clear tokens and redirect to login
           store.dispatch(logout());
           toast.error('Session expired. Please login again.');
           window.location.href = '/login';
           return Promise.reject(refreshError);
         }
       } else {
-        // If refresh is already in progress, queue the request
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
         })
           .then(() => {
-            // Retry original request after token refresh
             const newToken = localStorage.getItem('accessToken');
             originalRequest.headers.Authorization = `Bearer ${newToken}`;
             return axiosInstance(originalRequest);
@@ -109,17 +100,12 @@ axiosInstance.interceptors.response.use(
       }
     }
 
-    // Handle other errors
     if (error.response?.data?.error?.message) {
       const message = error.response.data.error.message;
       if (error.response.status >= 500) {
         toast.error('Server error. Please try again later.');
       } else if (error.response.status === 403) {
         toast.error('You do not have permission to perform this action.');
-      } else if (error.response.status === 404) {
-        // Resource not found - handled by components
-      } else {
-        toast.error(message);
       }
     } else if (error.message === 'Network Error') {
       toast.error('Network error. Please check your connection.');

@@ -51,6 +51,21 @@ export const register = createAsyncThunk(
   }
 );
 
+export const refreshToken = createAsyncThunk(
+  'auth/refreshToken',
+  async () => {
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (!refreshToken) {
+      throw new Error('No refresh token available');
+    }
+    const response = await authApi.refreshToken(refreshToken);
+    const { accessToken, refreshToken: newRefreshToken } = response.data.data;
+    localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('refreshToken', newRefreshToken);
+    return accessToken;
+  }
+);
+
 const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -65,7 +80,6 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Login
       .addCase(login.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -81,13 +95,11 @@ const authSlice = createSlice({
         state.error = action.error.message || 'Login failed';
         state.isAuthenticated = false;
       })
-      // Logout
       .addCase(logout.fulfilled, (state) => {
         state.user = null;
         state.isAuthenticated = false;
         state.error = null;
       })
-      // Get Current User
       .addCase(getCurrentUser.pending, (state) => {
         state.isLoading = true;
       })
@@ -101,7 +113,6 @@ const authSlice = createSlice({
         state.user = null;
         state.isAuthenticated = false;
       })
-      // Register
       .addCase(register.pending, (state) => {
         state.isLoading = true;
         state.error = null;
