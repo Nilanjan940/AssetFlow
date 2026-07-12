@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { axiosInstance } from '../../api/axios.config';
-import { User, ApiResponse } from '../../types';
+import { authApi } from '@/api/auth.api';
+import { User } from '@/types';
 
 interface AuthState {
   user: User | null;
@@ -19,29 +19,37 @@ const initialState: AuthState = {
 export const login = createAsyncThunk(
   'auth/login',
   async ({ email, password }: { email: string; password: string }) => {
-    const response = await axiosInstance.post<ApiResponse<{ user: User; accessToken: string; refreshToken: string }>>(
-      '/auth/login',
-      { email, password }
-    );
-    
+    const response = await authApi.login({ email, password });
     const { user, accessToken, refreshToken } = response.data.data;
     localStorage.setItem('accessToken', accessToken);
     localStorage.setItem('refreshToken', refreshToken);
-    
     return user;
   }
 );
 
 export const logout = createAsyncThunk('auth/logout', async () => {
-  localStorage.removeItem('accessToken');
-  localStorage.removeItem('refreshToken');
-  await axiosInstance.post('/auth/logout');
+  try {
+    await authApi.logout();
+  } catch (error) {
+    // Ignore logout errors
+  } finally {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+  }
 });
 
 export const getCurrentUser = createAsyncThunk('auth/getCurrentUser', async () => {
-  const response = await axiosInstance.get<ApiResponse<User>>('/auth/me');
+  const response = await authApi.getCurrentUser();
   return response.data.data;
 });
+
+export const register = createAsyncThunk(
+  'auth/register',
+  async (data: { email: string; password: string; firstName: string; lastName: string; departmentId: string }) => {
+    const response = await authApi.register(data);
+    return response.data.data;
+  }
+);
 
 const authSlice = createSlice({
   name: 'auth',
@@ -92,6 +100,19 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.user = null;
         state.isAuthenticated = false;
+      })
+      // Register
+      .addCase(register.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(register.fulfilled, (state) => {
+        state.isLoading = false;
+        state.error = null;
+      })
+      .addCase(register.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || 'Registration failed';
       });
   },
 });

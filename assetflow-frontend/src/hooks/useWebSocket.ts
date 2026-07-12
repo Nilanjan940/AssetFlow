@@ -7,15 +7,24 @@ interface WebSocketOptions {
   onConnect?: () => void;
   onDisconnect?: () => void;
   onError?: (error: Error) => void;
+  onMessage?: (data: any) => void;
 }
 
-export const useWebSocket = <T = any>(
-  events: string[],
+export const useWebSocket = (
+  events: string[] = [],
   options: WebSocketOptions
 ) => {
-  const { url, autoConnect = true, onConnect, onDisconnect, onError } = options;
+  const { 
+    url, 
+    autoConnect = true, 
+    onConnect, 
+    onDisconnect, 
+    onError,
+    onMessage 
+  } = options;
+  
   const [isConnected, setIsConnected] = useState(false);
-  const [lastMessage, setLastMessage] = useState<T | null>(null);
+  const [lastMessage, setLastMessage] = useState<any>(null);
   const socketRef = useRef<Socket | null>(null);
   const reconnectAttempts = useRef(0);
   const maxReconnectAttempts = 5;
@@ -38,18 +47,15 @@ export const useWebSocket = <T = any>(
       setIsConnected(true);
       reconnectAttempts.current = 0;
       onConnect?.();
-      console.log('WebSocket connected');
     });
 
     socket.on('disconnect', () => {
       setIsConnected(false);
       onDisconnect?.();
-      console.log('WebSocket disconnected');
     });
 
     socket.on('connect_error', (error) => {
       reconnectAttempts.current += 1;
-      console.error('WebSocket connection error:', error);
       if (reconnectAttempts.current >= maxReconnectAttempts) {
         onError?.(new Error('Max reconnection attempts reached'));
       }
@@ -57,15 +63,16 @@ export const useWebSocket = <T = any>(
 
     // Register event listeners
     events.forEach((event) => {
-      socket.on(event, (data: T) => {
+      socket.on(event, (data) => {
         setLastMessage(data);
+        onMessage?.(data);
         // Dispatch custom event for app-wide notifications
         window.dispatchEvent(new CustomEvent(`ws:${event}`, { detail: data }));
       });
     });
 
     return socket;
-  }, [url, events, onConnect, onDisconnect, onError]);
+  }, [url, events, onConnect, onDisconnect, onError, onMessage]);
 
   const disconnect = useCallback(() => {
     if (socketRef.current) {
