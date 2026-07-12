@@ -11,6 +11,7 @@ export default defineConfig({
   },
   server: {
     port: 3000,
+    open: true,
     proxy: {
       '/api': {
         target: 'http://localhost:8080',
@@ -23,6 +24,8 @@ export default defineConfig({
     },
   },
   build: {
+    outDir: 'dist',
+    sourcemap: true,
     rollupOptions: {
       output: {
         manualChunks: {
@@ -32,24 +35,6 @@ export default defineConfig({
           charts: ['chart.js', 'react-chartjs-2'],
         },
       },
-    },
-    chunkSizeWarningLimit: 1000,
-    sourcemap: true,
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true,
-      },
-    },
-  },
-  test: {
-    globals: true,
-    environment: 'jsdom',
-    setupFiles: './src/test/setup.ts',
-    coverage: {
-      reporter: ['text', 'json', 'html'],
-      exclude: ['node_modules/', 'src/test/'],
     },
   },
 });

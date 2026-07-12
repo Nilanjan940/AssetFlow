@@ -17,7 +17,6 @@ import {
 } from 'lucide-react';
 import { RootState, AppDispatch } from '@/store';
 import { logout } from '@/store/slices/auth.slice';
-import { cn } from '@/utils/helpers';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 interface HeaderProps {

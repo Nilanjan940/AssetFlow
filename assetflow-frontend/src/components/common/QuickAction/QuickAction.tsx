@@ -13,18 +13,10 @@ interface QuickActionProps {
 
 const colorMap = {
   primary: 'bg-primary-50 text-primary-600 dark:bg-primary-900/20 dark:text-primary-400',
-  success: 'bg-success/10 text-success dark:bg-success/20',
-  info: 'bg-info/10 text-info dark:bg-info/20',
-  warning: 'bg-warning/10 text-warning dark:bg-warning/20',
-  danger: 'bg-destructive/10 text-destructive dark:bg-destructive/20',
-};
-
-const hoverMap = {
-  primary: 'hover:border-primary/50 hover:shadow-primary/10',
-  success: 'hover:border-success/50 hover:shadow-success/10',
-  info: 'hover:border-info/50 hover:shadow-info/10',
-  warning: 'hover:border-warning/50 hover:shadow-warning/10',
-  danger: 'hover:border-destructive/50 hover:shadow-destructive/10',
+  success: 'bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-400',
+  info: 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400',
+  warning: 'bg-yellow-50 text-yellow-600 dark:bg-yellow-900/20 dark:text-yellow-400',
+  danger: 'bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400',
 };
 
 export const QuickAction: React.FC<QuickActionProps> = ({
@@ -40,8 +32,7 @@ export const QuickAction: React.FC<QuickActionProps> = ({
       onClick={onClick}
       className={cn(
         'group flex flex-col items-center justify-center p-4 rounded-lg border-2 border-dashed border-border',
-        'transition-all duration-200 hover:scale-[1.02] hover:shadow-lg',
-        hoverMap[color],
+        'transition-all duration-200 hover:scale-[1.02] hover:shadow-lg hover:border-primary/50',
         className
       )}
     >

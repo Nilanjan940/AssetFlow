@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { Search, X, History, Tag, Users, Calendar, Wrench } from 'lucide-react';
-import { useDebounce } from '../../../hooks/useDebounce';
+import { Search, X, Tag, Users, Calendar, Wrench } from 'lucide-react';
+import { useDebounce } from '@/hooks/useDebounce';
 
 interface SearchSuggestion {
   id: string;
@@ -12,7 +12,7 @@ interface SearchSuggestion {
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
-  onSuggestionSelect: (suggestion: SearchSuggestion) => void;
+  onSuggestionSelect?: (suggestion: SearchSuggestion) => void;
   placeholder?: string;
   className?: string;
 }
@@ -40,7 +40,6 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
   const debouncedQuery = useDebounce(query, 300);
 
-  // Mock suggestions - in production, this would call an API
   const fetchSuggestions = useCallback(async (searchQuery: string) => {
     if (!searchQuery.trim()) {
       setSuggestions([]);
@@ -48,7 +47,6 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     }
 
     setIsLoading(true);
-    // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 200));
 
     const mockSuggestions: SearchSuggestion[] = [
@@ -73,23 +71,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         type: 'booking',
         icon: iconMap.booking,
       },
-      {
-        id: '4',
-        title: `Electronics`,
-        subtitle: 'Asset Category',
-        type: 'category',
-        icon: iconMap.category,
-      },
-      {
-        id: '5',
-        title: `Server Rack Maintenance`,
-        subtitle: 'MNT-002 - In Progress',
-        type: 'maintenance',
-        icon: iconMap.maintenance,
-      },
     ];
 
-    // Filter based on query
     const filtered = mockSuggestions.filter(
       s =>
         s.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -133,7 +116,9 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   const handleSuggestionClick = (suggestion: SearchSuggestion) => {
     setQuery(suggestion.title);
     setIsOpen(false);
-    onSuggestionSelect(suggestion);
+    if (onSuggestionSelect) {
+      onSuggestionSelect(suggestion);
+    }
     onSearch(suggestion.title);
   };
 
@@ -162,7 +147,6 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         )}
       </div>
 
-      {/* Suggestions Dropdown */}
       {isOpen && (query || suggestions.length > 0) && (
         <div className="absolute z-50 mt-2 w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
           {isLoading ? (

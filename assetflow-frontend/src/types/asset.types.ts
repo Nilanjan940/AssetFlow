@@ -1,4 +1,4 @@
-import { BaseEntity, Priority } from './common.types';
+import { BaseEntity } from './common.types';
 import { User } from './user.types';
 
 export type AssetStatus = 

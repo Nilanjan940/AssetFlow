@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Calendar, Clock, Users, X } from 'lucide-react';
+import { Plus, Calendar, Clock, X } from 'lucide-react';
 import { Button } from '@/components/common/Button/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/common/Card/Card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/common/Table/Table';

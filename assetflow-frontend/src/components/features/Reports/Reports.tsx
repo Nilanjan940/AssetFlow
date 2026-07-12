@@ -1,5 +1,5 @@
 import React from 'react';
-import { BarChart3, FileExport, Printer, Download } from 'lucide-react';
+import { Printer, Download } from 'lucide-react';
 import { Button } from '@/components/common/Button/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/common/Card/Card';
 

@@ -1,6 +1,6 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { assetApi } from '@/api/asset.api';
-import { Asset, PaginatedResponse } from '@/types';
+import { Asset } from '@/types';
 
 interface AssetState {
   assets: Asset[];

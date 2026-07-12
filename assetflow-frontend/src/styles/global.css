@@ -56,3 +56,9 @@
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-muted-foreground/50;
 }
+.gradient-text {
+  background: linear-gradient(135deg, #4F46E5, #818CF8);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

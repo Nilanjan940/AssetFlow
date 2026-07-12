@@ -1,20 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Plus, Check, X, RefreshCw } from 'lucide-react';
+import React, { useState } from 'react';
+import { Plus, Check, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/common/Button/Button';
 import { Card, CardContent } from '@/components/common/Card/Card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/common/Table/Table';
 import { Badge } from '@/components/common/Badge/Badge';
 import { Modal } from '@/components/common/Modal/Modal';
-import { AppDispatch, RootState } from '@/store';
 import { formatDate, cn } from '@/utils/helpers';
 
 export const Allocations: React.FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedAllocation, setSelectedAllocation] = useState<any>(null);
 
-  // Mock data for demo
   const allocations = [
     {
       id: '1',
@@ -46,13 +41,12 @@ export const Allocations: React.FC = () => {
   ];
 
   const getStatusBadge = (status: string) => {
-    const variants: Record<string, { variant: any; className: string }> = {
-      ACTIVE: { variant: 'info', className: 'bg-info/10 text-info' },
-      OVERDUE: { variant: 'error', className: 'bg-destructive/10 text-destructive' },
-      RETURNED: { variant: 'success', className: 'bg-success/10 text-success' },
-      TRANSFERRED: { variant: 'warning', className: 'bg-warning/10 text-warning' },
+    const variants: Record<string, { className: string }> = {
+      ACTIVE: { className: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' },
+      OVERDUE: { className: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' },
+      RETURNED: { className: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' },
+      TRANSFERRED: { className: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' },
     };
-
     const config = variants[status] || variants.ACTIVE;
     return (
       <Badge variant="outline" className={cn('capitalize', config.className)}>

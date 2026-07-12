@@ -7,9 +7,10 @@ import { z } from 'zod';
 import { Eye, EyeOff, Mail, Lock, Loader2 } from 'lucide-react';
 import { Button } from '@/components/common/Button/Button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/common/Card/Card';
-import { login } from '@/store/slices/auth.slice';
+import { setUser } from '@/store/slices/auth.slice';
 import { AppDispatch, RootState } from '@/store';
 import { cn } from '@/utils/helpers';
+import toast from 'react-hot-toast';
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email'),
@@ -18,10 +19,58 @@ const loginSchema = z.object({
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
+// Mock user database for demo
+const MOCK_USERS = {
+  'admin@assetflow.com': {
+    id: '1',
+    email: 'admin@assetflow.com',
+    firstName: 'John',
+    lastName: 'Doe',
+    role: 'ADMIN',
+    departmentId: 'eng',
+    isActive: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  'priya@assetflow.com': {
+    id: '2',
+    email: 'priya@assetflow.com',
+    firstName: 'Priya',
+    lastName: 'Sharma',
+    role: 'DEPARTMENT_HEAD',
+    departmentId: 'eng',
+    isActive: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  'rahul@assetflow.com': {
+    id: '3',
+    email: 'rahul@assetflow.com',
+    firstName: 'Rahul',
+    lastName: 'Sharma',
+    role: 'ASSET_MANAGER',
+    departmentId: 'mkt',
+    isActive: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  'sarah@assetflow.com': {
+    id: '4',
+    email: 'sarah@assetflow.com',
+    firstName: 'Sarah',
+    lastName: 'Johnson',
+    role: 'EMPLOYEE',
+    departmentId: 'fin',
+    isActive: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+};
+
 export const Login: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const { isAuthenticated, isLoading, error } = useSelector((state: RootState) => state.auth);
+  const { isAuthenticated, isLoading } = useSelector((state: RootState) => state.auth);
   const [showPassword, setShowPassword] = useState(false);
 
   const {
@@ -43,17 +92,26 @@ export const Login: React.FC = () => {
     }
   }, [isAuthenticated, navigate]);
 
-  useEffect(() => {
-    if (error) {
-      setError('root', { message: error });
-    }
-  }, [error, setError]);
-
   const onSubmit = async (data: LoginFormData) => {
-    try {
-      await dispatch(login(data)).unwrap();
-    } catch (error) {
-      // Error is handled by the slice
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 800));
+
+    const user = MOCK_USERS[data.email as keyof typeof MOCK_USERS];
+    
+    if (user && data.password === 'password123') {
+      // Store token in localStorage (mock)
+      localStorage.setItem('accessToken', 'mock-jwt-token');
+      localStorage.setItem('refreshToken', 'mock-refresh-token');
+      
+      // Set user in Redux
+      dispatch(setUser(user));
+      toast.success(`Welcome back, ${user.firstName}!`);
+      navigate('/dashboard');
+    } else {
+      setError('root', { 
+        message: 'Invalid credentials. Please try again.' 
+      });
+      toast.error('Invalid email or password');
     }
   };
 
@@ -149,9 +207,10 @@ export const Login: React.FC = () => {
               Sign up
             </Link>
           </div>
-          <div className="text-xs text-muted-foreground text-center">
-            <span className="block">Demo Credentials:</span>
+          <div className="text-xs text-muted-foreground text-center border-t pt-2">
+            <span className="block font-medium text-primary">Demo Credentials:</span>
             <span className="block">admin@assetflow.com / password123</span>
+            <span className="block text-muted-foreground">(Works without backend)</span>
           </div>
         </CardFooter>
       </Card>

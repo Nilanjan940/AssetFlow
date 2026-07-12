@@ -100,8 +100,8 @@ axiosInstance.interceptors.response.use(
       }
     }
 
+    // Handle other errors
     if (error.response?.data?.error?.message) {
-      const message = error.response.data.error.message;
       if (error.response.status >= 500) {
         toast.error('Server error. Please try again later.');
       } else if (error.response.status === 403) {

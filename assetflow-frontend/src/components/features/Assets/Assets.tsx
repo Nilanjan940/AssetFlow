@@ -2,20 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { 
   Plus, 
-  Search, 
-  Filter, 
   Eye, 
   Edit, 
   Trash2, 
-  ChevronLeft, 
-  ChevronRight,
   Download,
-  Upload,
   RefreshCw,
-  MoreHorizontal,
 } from 'lucide-react';
 import { Button } from '@/components/common/Button/Button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/common/Card/Card';
+import { Card, CardContent } from '@/components/common/Card/Card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/common/Table/Table';
 import { Badge } from '@/components/common/Badge/Badge';
 import { Pagination } from '@/components/common/Pagination/Pagination';
@@ -24,7 +18,7 @@ import { Modal } from '@/components/common/Modal/Modal';
 import { AssetForm } from './AssetForm';
 import { fetchAssets, deleteAsset } from '@/store/slices/asset.slice';
 import { AppDispatch, RootState } from '@/store';
-import { cn, formatDate, getStatusColor } from '@/utils/helpers';
+import { cn, getStatusColor } from '@/utils/helpers';
 
 export const Assets: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -124,10 +118,6 @@ export const Assets: React.FC = () => {
               className="flex-1"
             />
             <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm">
-                <Filter className="h-4 w-4 mr-2" />
-                Filter
-              </Button>
               <Button variant="outline" size="sm" onClick={() => handleSearch('')}>
                 <RefreshCw className="h-4 w-4" />
               </Button>
@@ -174,8 +164,8 @@ export const Assets: React.FC = () => {
                     <TableCell>{asset.categoryName || 'Uncategorized'}</TableCell>
                     <TableCell>{getStatusBadge(asset.status)}</TableCell>
                     <TableCell>
-                      {asset.currentHolder ? 
-                        `${asset.currentHolder.firstName} ${asset.currentHolder.lastName}` : 
+                      {asset.holder ? 
+                        `${asset.holder.firstName} ${asset.holder.lastName}` : 
                         '—'
                       }
                     </TableCell>

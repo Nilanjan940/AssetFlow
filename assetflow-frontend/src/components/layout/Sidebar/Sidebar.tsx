@@ -9,9 +9,7 @@ import {
   ClipboardCheck,
   BarChart3,
   Building2,
-  History,
-  ChevronLeft,
-  ChevronRight,
+  History
 } from 'lucide-react';
 import { cn } from '@/utils/helpers';
 
